@@ -1,6 +1,5 @@
 const std = @import("std");
 const expect = std.testing.expect;
-const assert = std.debug.assert;
 
 pub fn main() !void {
     // comptime
@@ -96,11 +95,8 @@ test "try" {
     //try expect(err == error.Oops);
     //return;
     //};
-    //try expect(@TypeOf(v) == u32);
     //try expect(v == 12); // is never reached...
-    //assert(v == 11);
     var v: u32 = failFn() catch 12;
-    //assert(v == 12);
     try expect(v == 12);
 }
 
