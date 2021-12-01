@@ -1,5 +1,6 @@
 const std = @import("std");
 const expect = std.testing.expect;
+const derp = @import("herp/derp.zig");
 
 pub fn main() !void {
     // comptime
@@ -51,6 +52,8 @@ pub fn main() !void {
     const AllocationError = error{OutOfMemory};
     const err: FileOpenError = AllocationError.OutOfMemory;
     std.log.info("coerce error from a subset to a superset: {}", .{err == FileOpenError.OutOfMemory});
+
+    try derp.main();
 }
 
 fn addFive(x: u32) u32 {
