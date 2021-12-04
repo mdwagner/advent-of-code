@@ -33,7 +33,8 @@ pub fn main() !void {
     var day3InputList = ArrayList([]const u8).init(allocator);
     defer day3InputList.deinit();
     try day3InputList.appendSlice(&Day3Input.input);
-    std.log.info("Day 3 (Part 1): {}", .{try day3(allocator, day3InputList, 12)});
+    std.log.info("Day 3 (Part 1): {}", .{try day3A(allocator, day3InputList, 12)});
+    std.log.info("Day 3 (Part 2): {}", .{try day3B(allocator, &Day3Input.input, 12)});
 }
 
 fn day1A(depths: []const u32) u32 {
@@ -132,24 +133,81 @@ test "Day 2b" {
     try expect(results == 900);
 }
 
-fn day3(allocator: *Allocator, numbers: ArrayList([]const u8), max_len: u32) !u32 {
+const Day3Mode = enum {
+    min,
+    max,
+    pub fn isMin(self: Day3Mode) bool {
+        return self == Day3Mode.min;
+    }
+    pub fn isMax(self: Day3Mode) bool {
+        return self == Day3Mode.max;
+    }
+};
+
+fn day3Helper1(allocator: *Allocator, slice: [][]const u8, index: u32, mode: Day3Mode) ![][]const u8 {
+    var zero_list = ArrayList([]const u8).init(allocator);
+    defer zero_list.deinit();
+    var one_list = ArrayList([]const u8).init(allocator);
+    defer one_list.deinit();
+
+    for (slice) |str, _| {
+        //print("{s}\n\n", .{str});
+        const number = str[index];
+        if (number == '0') try zero_list.append(str);
+        if (number == '1') try one_list.append(str);
+    }
+
+    //print("type:{}", .{@TypeOf(zero_list.items)});
+    //return zero_list.items;
+
+    if (mode.isMax()) {
+        if (zero_list.items.len > one_list.items.len) {
+            return zero_list.items;
+        }
+        if (one_list.items.len > zero_list.items.len) {
+            return one_list.items;
+        }
+        if (zero_list.items.len == one_list.items.len) {
+            return one_list.items;
+        }
+    }
+    if (mode.isMin()) {
+        if (zero_list.items.len < one_list.items.len) {
+            return zero_list.items;
+        }
+        if (one_list.items.len < zero_list.items.len) {
+            return one_list.items;
+        }
+        if (zero_list.items.len == one_list.items.len) {
+            return zero_list.items;
+        }
+    }
+    unreachable;
+}
+
+fn day3A(allocator: *Allocator, numbers: ArrayList([]const u8), max_len: u32) !u32 {
     var gamma_list = ArrayList(u8).init(allocator);
     defer gamma_list.deinit();
     var epsilon_list = ArrayList(u8).init(allocator);
     defer epsilon_list.deinit();
 
+    var zero_list = ArrayList([]const u8).init(allocator);
+    defer zero_list.deinit();
+    var one_list = ArrayList([]const u8).init(allocator);
+    defer one_list.deinit();
+
     var index: u32 = 0;
     while (index < max_len) : (index += 1) {
-        var zero_count: u32 = 0;
-        var one_count: u32 = 0;
-        for (numbers.items) |str| {
+        defer zero_list.clearAndFree();
+        defer one_list.clearAndFree();
+        for (numbers.items) |str, _| {
             const number = str[index];
-            if (number == '0') zero_count += 1;
-            if (number == '1') one_count += 1;
+            if (number == '0') try zero_list.append(str);
+            if (number == '1') try one_list.append(str);
         }
-        try gamma_list.append(if (zero_count > one_count) '0' else '1');
+        try gamma_list.append(if (zero_list.items.len > one_list.items.len) '0' else '1');
     }
-    for (gamma_list.items) |num| {
+    for (gamma_list.items) |num, _| {
         if (num == '0') try epsilon_list.append('1');
         if (num == '1') try epsilon_list.append('0');
     }
@@ -158,13 +216,56 @@ fn day3(allocator: *Allocator, numbers: ArrayList([]const u8), max_len: u32) !u3
     return gamma * epsilon;
 }
 
+fn day3B(allocator: *Allocator, numbers: []const []const u8, max_len: u32) !u32 {
+    //var base: [][]const u8 = &[_][]const u8{};
+    var list = ArrayList([]const u8).init(allocator);
+    defer list.deinit();
+    for (numbers) |num, _| {
+        try list.append(num);
+    }
+
+    // TODO: fix these
+    var oxygen_gen: [][]const u8 = &[_][]const u8{};
+    mem.copy([]const u8, oxygen_gen, list.items);
+    var co2_scrubber: [][]const u8 = &[_][]const u8{};
+    mem.copy([]const u8, co2_scrubber, list.items);
+
+    var index: u32 = 0;
+
+    // calculate oxygen generator rating
+    while (index < max_len) : (index += 1) {
+        if (oxygen_gen.len == 1) break;
+        oxygen_gen = try day3Helper1(allocator, oxygen_gen, index, .max);
+    }
+
+    index = 0;
+
+    // calculate co2 scrubber rating
+    while (index < max_len) : (index += 1) {
+        if (co2_scrubber.len == 1) break;
+        co2_scrubber = try day3Helper1(allocator, co2_scrubber, index, .min);
+    }
+
+    var oxygen_gen_num = try fmt.parseInt(u32, oxygen_gen[0], 2);
+    var co2_scrubber_num = try fmt.parseInt(u32, co2_scrubber[0], 2);
+    return oxygen_gen_num * co2_scrubber_num;
+}
+
 test "Day 3a" {
     const allocator = std.testing.allocator;
     var input = ArrayList([]const u8).init(allocator);
     defer input.deinit();
     try input.appendSlice(&Day3Input.test_input);
-    const results = try day3(allocator, input, 5);
+    const results = try day3A(allocator, input, 5);
     try expect(results == 198);
 }
 
-//test "Day 3b" {}
+// TODO: tests are crashing, but not sure why...
+test "Day 3b" {
+    const allocator = std.testing.allocator;
+    const results = try day3B(allocator, &Day3Input.test_input, 5);
+    print("{}\n", .{results});
+    //print("{s}\n", .{"hello"});
+    //expect(false) catch @panic("DERP");
+    try expect(results == 230);
+}
