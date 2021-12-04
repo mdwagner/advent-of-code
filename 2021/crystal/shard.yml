@@ -1,0 +1,13 @@
+name: advent_of_code
+version: 0.1.0
+
+authors:
+  - Michael Wagner <mdwranger@gmail.com>
+
+targets:
+  advent_of_code:
+    main: src/advent_of_code.cr
+
+crystal: 1.2.2
+
+license: MIT
