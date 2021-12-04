@@ -10,6 +10,7 @@ const GeneralPurposeAllocator = std.heap.GeneralPurposeAllocator;
 
 const Day1Input = @import("inputs/day1.zig");
 const Day2Input = @import("inputs/day2.zig");
+const Day3Input = @import("inputs/day3.zig");
 
 pub fn main() !void {
     var gpa = GeneralPurposeAllocator(.{}){};
@@ -28,6 +29,11 @@ pub fn main() !void {
     try day2InputList.appendSlice(&Day2Input.input);
     std.log.info("Day 2 (Part 1): {}", .{try day2(allocator, day2InputList, false)});
     std.log.info("Day 2 (Part 2): {}", .{try day2(allocator, day2InputList, true)});
+
+    var day3InputList = ArrayList([]const u8).init(allocator);
+    defer day3InputList.deinit();
+    try day3InputList.appendSlice(&Day3Input.input);
+    std.log.info("Day 3 (Part 1): {}", .{try day3(allocator, day3InputList, 12)});
 }
 
 fn day1A(depths: []const u32) u32 {
@@ -125,3 +131,40 @@ test "Day 2b" {
     const results = try day2(allocator, input, true);
     try expect(results == 900);
 }
+
+fn day3(allocator: *Allocator, numbers: ArrayList([]const u8), max_len: u32) !u32 {
+    var gamma_list = ArrayList(u8).init(allocator);
+    defer gamma_list.deinit();
+    var epsilon_list = ArrayList(u8).init(allocator);
+    defer epsilon_list.deinit();
+
+    var index: u32 = 0;
+    while (index < max_len) : (index += 1) {
+        var zero_count: u32 = 0;
+        var one_count: u32 = 0;
+        for (numbers.items) |str| {
+            const number = str[index];
+            if (number == '0') zero_count += 1;
+            if (number == '1') one_count += 1;
+        }
+        try gamma_list.append(if (zero_count > one_count) '0' else '1');
+    }
+    for (gamma_list.items) |num| {
+        if (num == '0') try epsilon_list.append('1');
+        if (num == '1') try epsilon_list.append('0');
+    }
+    var gamma = try fmt.parseInt(u32, gamma_list.items, 2);
+    var epsilon = try fmt.parseInt(u32, epsilon_list.items, 2);
+    return gamma * epsilon;
+}
+
+test "Day 3a" {
+    const allocator = std.testing.allocator;
+    var input = ArrayList([]const u8).init(allocator);
+    defer input.deinit();
+    try input.appendSlice(&Day3Input.test_input);
+    const results = try day3(allocator, input, 5);
+    try expect(results == 198);
+}
+
+//test "Day 3b" {}
