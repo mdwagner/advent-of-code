@@ -14,12 +14,14 @@ Spectator.describe AdventOfCode::Day2 do
   let(input) { AdventOfCode::Helpers.string_lines_to_a(subject) }
 
   describe "#a" do
-    it "part 1 works" do
+    it "works" do
       expect(described_class.new.a(input)).to eq(150)
     end
+  end
 
-    it "part 2 works" do
-      expect(described_class.new.a(input, true)).to eq(900)
+  describe "#b" do
+    it "works" do
+      expect(described_class.new.b(input)).to eq(900)
     end
   end
 end

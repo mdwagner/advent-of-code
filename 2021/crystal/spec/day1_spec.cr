@@ -15,7 +15,7 @@ Spectator.describe AdventOfCode::Day1 do
     263
     TEXT
   }
-  let(input) { AdventOfCode::Helpers.string_lines_to_a(subject).map(&.to_u32) }
+  let(input) { AdventOfCode::Helpers.string_lines_to_a(subject) }
 
   describe "#a" do
     it "works" do
