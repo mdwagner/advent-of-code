@@ -2,18 +2,18 @@ require "./spec_helper"
 
 Spectator.describe AdventOfCode::Day1 do
   subject {
-    <<-TEXT
-    199
-    200
-    208
-    210
-    200
-    207
-    240
-    269
-    260
-    263
-    TEXT
+<<-TEXT
+199
+200
+208
+210
+200
+207
+240
+269
+260
+263
+TEXT
   }
   let(input) { AdventOfCode::Helpers.string_lines_to_a(subject) }
 
