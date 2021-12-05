@@ -9,7 +9,7 @@ crystal: 1.2.2
 
 targets:
   advent_of_code:
-    main: src/main.cr
+    main: src/advent_of_code.cr
 
 development_dependencies:
   spectator:

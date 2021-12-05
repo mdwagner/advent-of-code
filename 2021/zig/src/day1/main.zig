@@ -12,8 +12,10 @@ pub fn main() !void {
         if (leaked) expect(false) catch @panic("TEST FAIL");
     }
     const allocator = &gpa.allocator;
-    std.log.info("Day 1 (Part 1): {}", .{day1A(&Input.input)});
-    std.log.info("Day 1 (Part 2): {}", .{try day1B(allocator, &Input.input)});
+
+    // TODO: read input from _inputs/*.txt
+    //std.log.info("Day 1 (Part 1): {}", .{day1A(&Input.input)});
+    //std.log.info("Day 1 (Part 2): {}", .{try day1B(allocator, &Input.input)});
 }
 
 fn day1A(depths: []const u32) u32 {

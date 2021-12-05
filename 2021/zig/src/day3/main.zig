@@ -15,7 +15,8 @@ pub fn main() !void {
     }
     const allocator = &gpa.allocator;
 
-    std.log.info("Day 3 (Part 1): {}", .{try day3A(allocator, &Input.input)});
+    // TODO: read input from _inputs/*.txt
+    //std.log.info("Day 3 (Part 1): {}", .{try day3A(allocator, &Input.input)});
     //std.log.info("Day 3 (Part 2): {}", .{try day3B(allocator, &Input.input, 12)});
 }
 
@@ -149,12 +150,12 @@ fn day3B(allocator: *Allocator, input: []const []const u8) !u32 {
 
     // calculate oxygen generator rating
     //while (index < max_len) : (index += 1) {
-        //if (oxygen_gen.items.len == 1) break;
-        //try day3Helper1(allocator, &oxygen_gen, index, .max);
-        //for (oxygen_gen.items) |item, _| {
-            //print("{s},", .{item});
-        //}
-        //print("\n", .{});
+    //if (oxygen_gen.items.len == 1) break;
+    //try day3Helper1(allocator, &oxygen_gen, index, .max);
+    //for (oxygen_gen.items) |item, _| {
+    //print("{s},", .{item});
+    //}
+    //print("\n", .{});
     //}
 
     //index = 0;

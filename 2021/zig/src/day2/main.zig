@@ -16,11 +16,12 @@ pub fn main() !void {
     }
     const allocator = &gpa.allocator;
 
-    var day2InputList = ArrayList([]const u8).init(allocator);
-    defer day2InputList.deinit();
-    try day2InputList.appendSlice(&Input.input);
-    std.log.info("Day 2 (Part 1): {}", .{try day2(allocator, day2InputList, false)});
-    std.log.info("Day 2 (Part 2): {}", .{try day2(allocator, day2InputList, true)});
+    // TODO: read input from _inputs/*.txt
+    //var day2InputList = ArrayList([]const u8).init(allocator);
+    //defer day2InputList.deinit();
+    //try day2InputList.appendSlice(&Input.input);
+    //std.log.info("Day 2 (Part 1): {}", .{try day2(allocator, day2InputList, false)});
+    //std.log.info("Day 2 (Part 2): {}", .{try day2(allocator, day2InputList, true)});
 }
 
 fn day2(allocator: *Allocator, commands: ArrayList([]const u8), calculate_aim: bool) !u32 {
