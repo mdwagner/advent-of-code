@@ -1,2 +1,2 @@
-require "spec"
-require "../src/advent_of_code"
+require "spectator"
+require "../src/main"
