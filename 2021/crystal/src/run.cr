@@ -1,6 +1,6 @@
 require "./advent_of_code"
 
-{% for day in 1..4 %}
+{% for day in 1..5 %}
 {% contents = read_file("#{__DIR__}/../../_inputs/day#{day}.txt") %}
 
 day{{day.id}}_input = AdventOfCode::Helpers.string_lines_to_a({{contents.id.stringify}})
