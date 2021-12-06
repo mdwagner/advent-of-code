@@ -20,7 +20,7 @@ class AdventOfCode::Day4
 
     property board = [] of Array(Position)
 
-    def add_row(row : String) : Void
+    def add_row(row : String) : Nil
       if @board.size + 1 > MAX_BOARD_SIZE
         raise "Too many rows!"
       end
@@ -36,7 +36,7 @@ class AdventOfCode::Day4
       @board << positions
     end
 
-    def mark_number(number) : Void
+    def mark_number(number) : Nil
       @board.each do |row|
         row.each do |pos|
           if pos.value == number
