@@ -1,6 +1,5 @@
 class AdventOfCode::Day5
-  def a(input : Array(String))
-    # [{ {x1,y1}, {x2,y2} }, ...]
+  def a(input : Array(String), diagonals = false)
     vents = parse_vents(input)
 
     max_x = vents.each.map { |lsp| [lsp[0][0], lsp[1][0]].max }.max + 1
@@ -30,6 +29,45 @@ class AdventOfCode::Day5
         ((coords_pair.min)..(coords_pair.max)).each do |x|
           diagram[coordinate_to_index(x, y, max_y)] += 1
         end
+      elsif diagonals
+        if start_ls[0] == start_ls[1] && end_ls[0] == end_ls[1]
+          # 1,1 -> 3,3
+          (start_ls[0]..end_ls[0]).each do |num|
+            diagram[coordinate_to_index(num, num, max_y)] += 1
+          end
+        elsif start_ls[0] == end_ls[1] && start_ls[1] == end_ls[0]
+          # 9,7 -> 7,9
+          x_pair = [start_ls[0], end_ls[0]]
+          x_pair_min = x_pair.min
+          x_pair_max = x_pair.max
+
+          y_index = x_pair_max.to_i32
+          (x_pair_min..x_pair_max).each do |x|
+            diagram[coordinate_to_index(x, y_index, max_y)] += 1
+            y_index -= 1
+          end
+        else
+          # 6,4 -> 2,0
+          # 5,5 -> 8,2
+          max_ls_x = [start_ls, end_ls].max_by { |ls| ls[0] }
+          min_ls_x = [start_ls, end_ls].min_by { |ls| ls[0] }
+
+          diff = max_ls_x[0] - min_ls_x[0]
+
+          increase_y = min_ls_x[1] < max_ls_x[1]
+          decrease_y = min_ls_x[1] > max_ls_x[1]
+
+          starting_y = min_ls_x[1].to_i32
+
+          (min_ls_x[0]..max_ls_x[0]).each do |x|
+            diagram[coordinate_to_index(x, starting_y, max_y)] += 1
+            if increase_y
+              starting_y += 1
+            elsif decrease_y
+              starting_y -= 1
+            end
+          end
+        end
       end
     end
 
@@ -41,6 +79,7 @@ class AdventOfCode::Day5
   end
 
   def b(input : Array(String))
+    a(input, diagonals: true)
   end
 
   alias LineSegment = Tuple(UInt32, UInt32)
