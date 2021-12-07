@@ -14,32 +14,26 @@ class AdventOfCode::Day5
       x_match = start_ls[0] == end_ls[0]
       y_match = start_ls[1] == end_ls[1]
 
-      if x_match || y_match
-        if x_match
-          # fill in y coords
-        elsif y_match
-          # fill in x coords
+      if x_match
+        # fill in y coords
+        x = start_ls[0]
+        coords_pair = [start_ls[1], end_ls[1]]
+
+        ((coords_pair.min)..(coords_pair.max)).each do |y|
+          diagram[coordinate_to_index(x, y, max_y)] += 1
         end
+      elsif y_match
+        # fill in x coords
+        y = start_ls[1]
+        coords_pair = [start_ls[0], end_ls[0]]
 
-        start_ls_idx = coordinate_to_index(*start_ls, max_y)
-        diagram[start_ls_idx] += 1
-
-        end_ls_idx = coordinate_to_index(*end_ls, max_y)
-        diagram[end_ls_idx] += 1
+        ((coords_pair.min)..(coords_pair.max)).each do |x|
+          diagram[coordinate_to_index(x, y, max_y)] += 1
+        end
       end
     end
 
-    diagram.each_with_index do |value, index|
-      if value == 0
-        print "."
-      else
-        print value
-      end
-
-      if ((index + 1) % max_x) == 0
-        print "\n"
-      end
-    end
+    diagram.select { |i| i >= 2 }.size
   end
 
   private def coordinate_to_index(x, y, max_y)
@@ -61,6 +55,20 @@ class AdventOfCode::Day5
       start_segment = LineSegment.new(x1.to_u32, y1.to_u32)
       end_segment = LineSegment.new(x2.to_u32, y2.to_u32)
       LineSegmentPair.new(start_segment, end_segment)
+    end
+  end
+
+  private def print_diagram(diagram, max_x)
+    diagram.each_with_index do |value, index|
+      if value == 0
+        print "."
+      else
+        print value
+      end
+
+      if ((index + 1) % max_x) == 0
+        print "\n"
+      end
     end
   end
 end
