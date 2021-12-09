@@ -1,6 +1,8 @@
 require "./advent_of_code"
 
-{% for day in 1..5 %}
+{% begin %}
+{% day_count = system("ls -1 #{__DIR__}/../../_inputs/ | wc -l").to_i %}
+{% for day in 1..day_count %}
 {% contents = read_file("#{__DIR__}/../../_inputs/day#{day}.txt") %}
 
 day{{day.id}}_input = AdventOfCode::Helpers.string_lines_to_a({{contents.id.stringify}})
@@ -11,4 +13,5 @@ puts "Day {{day.id}}a: #{day{{day.id}}_a_result}"
 puts "Day {{day.id}}b: #{day{{day.id}}_b_result}"
 puts
 
+{% end %}
 {% end %}
