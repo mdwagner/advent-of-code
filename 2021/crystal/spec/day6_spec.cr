@@ -15,8 +15,8 @@ TEXT
   end
 
   describe "#b" do
-    skip "works" do
-      expect(described_class.new.b(input)).to eq(12)
+    it "works" do
+      expect(described_class.new.b(input)).to eq(26_984_457_539)
     end
   end
 end
