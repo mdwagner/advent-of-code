@@ -1,31 +1,31 @@
 class AdventOfCode::Day6
   def a(input : Array(String), days = 80)
-    fish_h = Hash(Int32, UInt64).new
-    9.times do |n|
-      fish_h[n] = 0
-    end
+    fishes = StaticArray(UInt64, 9).new(0)
+
     input[0].split(",").each do |n|
-      fish_h[n.to_i] += 1
+      fishes[n.to_i] += 1
     end
 
     days.times do
       fishes_to_add = 0
 
-      if fish_h[0] > 0
-        fishes_to_add = fish_h[0]
-        fish_h[0] = 0 # should always reset fish 0
+      fishes.each_with_index do |count, num|
+        case num
+        when 0
+          if count > 0
+            fishes_to_add = count
+          end
+        else
+          fishes[num - 1] = count
+        end
+        fishes[num] = 0
       end
 
-      (1..8).to_a.each do |num|
-        fish_h[num - 1] = fish_h[num]
-        fish_h[num] = 0
-      end
-
-      fish_h[8] += fishes_to_add # adds new fishes
-      fish_h[6] += fishes_to_add # reset existing fishes
+      fishes[8] += fishes_to_add # adds new fishes
+      fishes[6] += fishes_to_add # reset existing fishes
     end
 
-    fish_h.values.sum
+    fishes.sum
   end
 
   private def print_fishes(hash)
